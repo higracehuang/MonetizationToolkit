@@ -1,6 +1,10 @@
-struct Constants {
-    static let namespace = "MTK"
-    struct StorageKeys {
-        static let lastVersionPromptedForPaywallKey = "\(namespace).lastVersionPromptedForPaywallKey"
+import Foundation
+
+/// Constants used throughout the MonetizationToolkit
+public enum Constants {
+    /// Keys used for storage
+    public enum StorageKeys {
+        /// Key for storing the last version where paywall was prompted
+        public static let lastVersionPromptedForPaywallKey = "lastVersionPromptedForPaywall"
     }
 }
