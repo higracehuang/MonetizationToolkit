@@ -23,3 +23,11 @@ struct ContentView: View {
     }
 }
 ```
+
+### Use PaywallPromptManager to control when to show the paywall for a feature limit
+
+```Swift
+
+displayPaywall = PaywallPromptManager.shared.shouldPromptPaywallForFeatureLimit(hasIAP: hasIAP, currentCount: currentCount, limit: limit)
+
+```
