@@ -11,7 +11,6 @@ import XCTest
 
 final class PaywallPromptManagerTests: XCTestCase {
     var sut: PaywallPromptManager!
-    var mockUserDefaults: UserDefaults!
     
     override func setUp() {
         super.setUp()
@@ -23,25 +22,41 @@ final class PaywallPromptManagerTests: XCTestCase {
         super.tearDown()
     }
     
-    // MARK: - Feature Limit Tests
+    // MARK: - Feature Usage Limit Tests
     
-    func testShouldNotPromptPaywallForFeatureLimitWhenUserHasIAP() {
-        let result = sut.shouldPromptPaywallForFeatureLimit(hasIAP: true, currentCount: 10, limit: 5)
-        XCTAssertFalse(result, "Should not show paywall when user has IAP, regardless of count")
+    func testShouldNotPromptPaywallForFeatureLimitWhenUserHasActivePurchase() {
+        let result = sut.shouldPromptPaywallForFeatureLimit(
+            hasActivePurchase: true,
+            usageCount: 10,
+            usageLimit: 5
+        )
+        XCTAssertFalse(result, "Should not show paywall when user has active purchase, regardless of usage count")
     }
     
-    func testShouldPromptPaywallWhenFeatureLimitReached() {
-        let result = sut.shouldPromptPaywallForFeatureLimit(hasIAP: false, currentCount: 5, limit: 5)
-        XCTAssertTrue(result, "Should show paywall when limit is reached")
+    func testShouldPromptPaywallWhenFeatureUsageLimitReached() {
+        let result = sut.shouldPromptPaywallForFeatureLimit(
+            hasActivePurchase: false,
+            usageCount: 5,
+            usageLimit: 5
+        )
+        XCTAssertTrue(result, "Should show paywall when usage limit is reached")
     }
     
-    func testShouldPromptPaywallWhenFeatureLimitExceeded() {
-        let result = sut.shouldPromptPaywallForFeatureLimit(hasIAP: false, currentCount: 6, limit: 5)
-        XCTAssertTrue(result, "Should show paywall when limit is exceeded")
+    func testShouldPromptPaywallWhenFeatureUsageLimitExceeded() {
+        let result = sut.shouldPromptPaywallForFeatureLimit(
+            hasActivePurchase: false,
+            usageCount: 6,
+            usageLimit: 5
+        )
+        XCTAssertTrue(result, "Should show paywall when usage limit is exceeded")
     }
     
-    func testShouldNotPromptPaywallWhenUnderFeatureLimit() {
-        let result = sut.shouldPromptPaywallForFeatureLimit(hasIAP: false, currentCount: 4, limit: 5)
-        XCTAssertFalse(result, "Should not show paywall when under limit")
+    func testShouldNotPromptPaywallWhenUnderFeatureUsageLimit() {
+        let result = sut.shouldPromptPaywallForFeatureLimit(
+            hasActivePurchase: false,
+            usageCount: 4,
+            usageLimit: 5
+        )
+        XCTAssertFalse(result, "Should not show paywall when under usage limit")
     }
 }

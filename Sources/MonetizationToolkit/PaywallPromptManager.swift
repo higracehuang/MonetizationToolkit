@@ -16,11 +16,11 @@ public class PaywallPromptManager {
         return PaywallPromptManager(userDefaults: userDefaults)
     }
 
-    /// Determines if a paywall prompt should be shown to the user
-    /// - Parameter hasIAP: Boolean indicating if the user has already purchased
+    /// Determines if a paywall prompt should be shown to the user at app launch
+    /// - Parameter hasActivePurchase: Boolean indicating if the user has an active purchase
     /// - Returns: Boolean indicating if the paywall should be shown
-    public func shouldPromptPaywallAtLaunch(hasIAP: Bool) -> Bool {
-        guard !hasIAP else { return false }
+    public func shouldPromptPaywallAtLaunch(hasActivePurchase: Bool) -> Bool {
+        guard !hasActivePurchase else { return false }
 
         let lastVersionPrompted = userDefaults.string(forKey: Constants.StorageKeys.lastVersionPromptedForPaywallKey)
         
@@ -41,13 +41,19 @@ public class PaywallPromptManager {
         return Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
     }
 
-    public func shouldPromptPaywallForFeatureLimit(hasIAP: Bool, currentCount: Int, limit: Int) -> Bool {
-        if hasIAP { return false }
-
-        if currentCount >= limit {
-            return true
-        }
-
-        return false
+    /// Determines if a paywall should be shown based on feature usage limits
+    /// - Parameters:
+    ///   - hasActivePurchase: Boolean indicating if the user has an active purchase
+    ///   - usageCount: Current count of feature usage
+    ///   - usageLimit: Maximum allowed usage before showing paywall
+    /// - Returns: Boolean indicating if the paywall should be shown
+    public func shouldPromptPaywallForFeatureLimit(
+        hasActivePurchase: Bool,
+        usageCount: Int,
+        usageLimit: Int
+    ) -> Bool {
+        if hasActivePurchase { return false }
+        
+        return usageCount >= usageLimit
     }
 }
